@@ -9,7 +9,8 @@ module TestAfterCommit::DatabaseStatements
           @_current_transaction_records.push([]) if @_current_transaction_records.empty?
         end
         result = yield
-      rescue Exception
+      rescue Exception => e
+        puts(e.backtrace)
         rolled_back = true
         raise
       ensure
