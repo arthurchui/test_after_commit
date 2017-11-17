@@ -10,7 +10,6 @@ module TestAfterCommit::DatabaseStatements
         end
         result = yield
       rescue Exception => e
-        puts(e.backtrace)
         rolled_back = true
         raise
       ensure
@@ -44,6 +43,9 @@ module TestAfterCommit::DatabaseStatements
       transaction = original.dup
       transaction.instance_variable_set(:@records, transaction.records.dup) # deep clone of records array
       original.records.clear                                                # so that this clear doesn't clear out both copies
+      if TestAfterCommit.commit_event
+        ActiveSupport::Notifications.publish(TestAfterCommit.commit_event, connection_id: @connection.thread_id)
+      end
       transaction.commit_records
     end
   end

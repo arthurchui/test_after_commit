@@ -15,7 +15,7 @@ ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:prepend, TestAfterCommit
 module TestAfterCommit
   @enabled = true
   class << self
-    attr_accessor :enabled
+    attr_accessor :enabled, :commit_event
 
     def with_commits(value = true)
       old = enabled
